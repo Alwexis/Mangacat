@@ -1,0 +1,18 @@
+<ion-tabs (ionTabsDidChange)="tabsChange($event)">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="comunity" href="/tabs/comunity">
+      <ion-icon aria-hidden="true" name="chatbubble"></ion-icon>
+      <ion-label>Comunidad</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="home" href="/tabs/home">
+      <ion-icon aria-hidden="true" name="home"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="profile" href="/tabs/profile">
+      <ion-icon aria-hidden="true" name="person-circle"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

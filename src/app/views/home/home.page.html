@@ -1,0 +1,41 @@
+<ion-content [fullscreen]="true">  
+  <ion-header>
+    <section class="w-full flex items-center justify-center">
+      <img class="w-16 mx-2" src="../../../assets/mangacat.png" alt="mangacat">
+      <h1 class="mx-2 text-4xl text-center py-4">MangaCat</h1>
+    </section>
+    <ion-segment #Segment value="home">
+      <ion-segment-button (click)="changeSlide()" value="home">
+        <ion-label>Inicio</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="changeSlide()" value="explore">
+        <ion-label>Explorar</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-header>
+
+  <swiper-container [noSwiping]="true" [noSwipingClass]="'no-swipe'" #Swiper id="main-swiper" [slidesPerView]="1">
+      <swiper-slide>
+        <home-slide class="{{ activeView == 'explore' ? 'hidden': '' }}"></home-slide>
+      </swiper-slide>
+      <swiper-slide>
+        <explore-slide class="{{ activeView == 'home' ? 'hidden': '' }}"></explore-slide>
+      </swiper-slide>
+  </swiper-container>
+
+  <!-- Credits -->
+  <section class="flex flex-col items-center justify-center mt-8 mb-4 px-4">
+    <div class="flex flex-col items-center justify-center">
+      <span class="text-neutral-100 text-sm font-medium">Ariel Silva</span>
+      <div class="flex items-center mt-1 text-neutral-400">
+        <ion-icon class="mr-2" name="logo-linkedin"></ion-icon>
+        <ion-icon class="mx-2" name="logo-github"></ion-icon>
+        <ion-icon class="mx-2" name="logo-google"></ion-icon>
+        <ion-icon class="ml-2" name="logo-twitter"></ion-icon>
+      </div>
+    </div>
+    <p class="mt-2 text-xs text-center text-neutral-400">Todos los Mangas, Capítulos, Imágenes y Datos en general, los obtuve de la Página <a class="text-red-200" href="https://mangadex.org/">MangaDex.com</a>. Los créditos de por ellos pertenecen a los Usuarios y/o Scanlations.</p>
+  </section>
+</ion-content>
+
+<router-outlet></router-outlet>

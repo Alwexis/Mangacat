@@ -1,0 +1,300 @@
+<ion-content [fullscreen]="true">
+    @if (loaded) {
+        <section class="flex items-center absolute top-0 left-0 w-auto text-white z-50 px-4 py-2">
+            <div (click)="goBack()" class="flex items-center justify-center mr-1 w-6 h-6 bg-stone-800 rounded-md">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </div>
+        </section>
+        <section class="flex items-center absolute top-0 right-0 w-auto text-white z-50 px-4 py-2">
+            <div class="flex items-center justify-center mr-1 w-6 h-6 bg-stone-800 rounded-md">
+                <ion-icon name="bookmark-outline"></ion-icon>
+            </div>
+            <div class="flex items-center justify-center ml-1 w-6 h-6 bg-stone-800 rounded-md">
+                <ion-icon name="star-outline"></ion-icon>
+            </div>
+        </section>
+        <section class="h-auto relative top-0 left-0 right-0">
+            <div class="absolute h-full top-0 right-0 left-0">
+                <div class="h-full bg-cover" style="background-position: center 33%; background-image: url('https://mangadex.org/covers/{{manga.id}}/{{manga.cover_art.attributes.fileName}}.512.jpg')"></div>
+                <div class="h-full absolute top-0 left-0 right-0" style="background: linear-gradient(to bottom,rgb(25 26 28 /.8) 0%,rgb(0 0 0) 100%);"></div>
+            </div>
+            <div class="flex flex-col justify-center h-max w-full relative top-0 z-10 px-4 pt-16">
+                <section class="flex justify-start w-full">
+                    <img class="w-24 h-fit shadow-md rounded-md" src="https://mangadex.org/covers/{{manga.id}}/{{manga.cover_art.attributes.fileName}}" alt="{{ manga.id }}">
+                    <section class="flex flex-col justify-between h-auto px-4">
+                        <div class="flex flex-col w-full">
+                            <h1 class="text-xl font-extrabold break-words">{{ manga.attributes.title.en }}</h1>
+                            <span class="text-sm my-1 text-gray-300">{{ manga.attributes.altTitles['ja-ro'] ? manga.attributes.altTitles['ja-ro'] : manga.attributes.title.en }}</span>
+                            <!--
+                            <span class="text-sm font-medium">{{ manga.author.attributes.name }}</span>
+                            -->
+                        </div>
+                    </section>
+                </section>
+                <div class="flex items-center justify-center my-2 text-white">
+                    <section class="flex items-center bg-stone-800 rounded-md px-1.5 py-0.5">
+                        <ion-icon name="star-outline"></ion-icon>
+                        <span class="ml-1">{{ manga.stats.rating.average.toFixed(1) }}</span>
+                    </section>
+                    <section class="flex items-center mx-4 bg-stone-800 rounded-md px-1.5 py-0.5">
+                        <ion-icon name="bookmark-outline"></ion-icon>
+                        <span class="ml-1">{{ format(manga.stats.follows) }}</span>
+                    </section>
+                    <section class="flex items-center bg-stone-800 rounded-md px-1.5 py-0.5">
+                        <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+                        <span class="ml-1">{{ format(manga.stats.comments ? manga.stats.comments.repliesCount : 0) }}</span>
+                    </section>
+                </div>
+                <section class="flex flex-wrap my-2">
+                    @for (tag of manga.attributes.tags; track tag.id) {
+                        <span class="{{ $first ? 'mr-0.5' : '' }} {{ $last ? 'ml-0.5' : '' }} {{ !$last && !$first ? 'mx-0.5' : '' }} text-xs font-semibold bg-stone-800 rounded-md px-1.5 py-0.5 my-0.5">{{ tag.attributes.name.en }}</span>
+                    }
+                </section>
+                <section class="flex items-center justify-between text-sm">
+                    <div class="flex items-center">
+                        @if (manga.attributes.status.toLowerCase() == 'ongoing') {
+                            <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                        } @else if (manga.attributes.status.toLowerCase() == 'completed') {
+                            <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                        } @else if (manga.attributes.status.toLowerCase() == 'hiatus') {
+                            <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                        } @else if (manga.attributes.status.toLowerCase() == 'cancelled') {
+                            <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                        } @else {
+                            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                        }
+                        <span class="ml-2 mr-1">Estatus:</span>
+                        <span class="text-gray-200">{{ format(manga.attributes.status) }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <span class="ml-2 text-gray-200">{{ manga.attributes.normalizedCreatedAt }}</span>
+                    </div>
+                </section>
+            </div>
+        </section>
+        <section class="px-4 my-2">
+            @if (manga.attributes.description.en) {
+                <div #DescriptionHolder aria-description="short" class="w-full group">
+                    <section class="flex flex-col">
+                        <p class="group-aria-[description=short]:line-clamp-3 text-neutral-400">{{ manga.attributes.description.en }}</p>
+                        <!-- hehe -->
+                        <div class="group-aria-[description=short]:hidden">
+                            <section class="flex items-center justify-between my-2">
+                                <div class="flex flex-col">
+                                    <h6 class="font-semibold text-sm">Autor</h6>
+                                    <span class="text-xs w-fit bg-stone-800 rounded-md px-1.5 py-0.5 my-0.5">{{ manga.author.attributes.name }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h6 class="font-semibold text-sm">Artista</h6>
+                                    <span class="text-xs w-fit bg-stone-800 rounded-md px-1.5 py-0.5 my-0.5">{{ manga.artist.attributes.name }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h6 class="font-semibold text-sm">Demográfica</h6>
+                                    <span class="text-xs w-fit bg-stone-800 rounded-md px-1.5 py-0.5 my-0.5">{{ manga.attributes.publicationDemographic }}</span>
+                                </div>
+                            </section>
+                            <section class="my-2">
+                                @if (manga.attributes.categorizedTags.format) {
+                                    <div class="flex flex-col my-1">
+                                        <span class="font-semibold text-sm my-0.5">Formato</span>
+                                        <section class="flex flex-wrap">
+                                            @for (tag of manga.attributes.categorizedTags.format; track tag.id) {
+                                                <span class="{{ $first ? 'mr-0.5' : '' }} {{ $last ? 'ml-0.5' : '' }} {{ !$last && !$first ? 'mx-0.5' : '' }} text-xs bg-stone-800 rounded-md px-2 py-1 my-0.5">{{ tag.attributes.name.en }}</span>
+                                            }
+                                        </section>
+                                    </div>
+                                }
+                                @if (manga.attributes.categorizedTags.genre) {
+                                    <div class="flex flex-col my-1">
+                                        <span class="font-semibold text-sm my-0.5">Géneros</span>
+                                        <section class="flex flex-wrap">
+                                            @for (tag of manga.attributes.categorizedTags.genre; track tag.id) {
+                                                <span class="{{ $first ? 'mr-0.5' : '' }} {{ $last ? 'ml-0.5' : '' }} {{ !$last && !$first ? 'mx-0.5' : '' }} text-xs bg-stone-800 rounded-md px-2 py-1 my-0.5">{{ tag.attributes.name.en }}</span>
+                                            }
+                                        </section>
+                                    </div>
+                                }
+                                @if (manga.attributes.categorizedTags.theme) {
+                                    <div class="flex flex-col my-1">
+                                        <span class="font-semibold text-sm my-0.5">Temas</span>
+                                        <section class="flex flex-wrap">
+                                            @for (tag of manga.attributes.categorizedTags.theme; track tag.id) {
+                                                <span class="{{ $first ? 'mr-0.5' : '' }} {{ $last ? 'ml-0.5' : '' }} {{ !$last && !$first ? 'mx-0.5' : '' }} text-xs bg-stone-800 rounded-md px-2 py-1 my-0.5">{{ tag.attributes.name.en }}</span>
+                                            }
+                                        </section>
+                                    </div>
+                                }
+                            </section>
+                        </div>
+                    </section>
+                    <span (click)="DescriptionHolder.setAttribute('aria-description', DescriptionHolder.getAttribute('aria-description') === 'short' ? 'long' : 'short')" class="flex flex-col mt-1 items-center justify-center text-center w-full text-white before:h-[1px] before:bg-neutral-400 before:w-3/4 before:block">{{ DescriptionHolder.getAttribute('aria-description') === 'short' ? 'Leer más' : 'Leer menos' }}</span>
+                </div>
+            }
+            
+        </section>
+        <section class="px-4 my-2">
+            <div>
+                <h1 class="text-xl">Capítulos</h1>
+                <section class="flex items-center">
+                    <span class="text-sm text-neutral-400">Capítulos en los idiomas:</span>
+                    <img width="16" height="16" class="h-4 w-4 mx-1" src="../../../assets/en.svg" alt="en">
+                    <img width="16" height="16" class="h-4 w-4 mx-1" src="../../../assets/es.svg" alt="es">
+                    <img width="16" height="16" class="h-4 w-4 mx-1" src="../../../assets/es-la.svg" alt="es-la">
+                </section>
+                <span class="text-sm">Has click en el ícono del Idioma para desactivarlo</span>
+            </div>
+            <div class="my-2">
+                @if (loadingChapters) {
+                    @for (number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track number) {
+                        <div class="w-full h-24 my-2 rounded-md animate-pulse bg-stone-900"></div>
+                    }
+                } @else {
+                    @for (chapterKey of chapters.keys; track chapterKey) {
+                        <section aria-expanded="false" class="group bg-stone-800 rounded-md my-2">
+                            @if (chapters.data[chapterKey].length > 1) {
+                                <div (click)="expand($event)" class="ion-activatable ripple-parent ripple-effect flex items-center justify-between px-4 py-2">
+                                    <ion-ripple-effect></ion-ripple-effect>
+                                    <h1>Ch. {{ chapters.data[chapterKey][0].attributes.chapter }}</h1>
+                                    <section class="flex items-center">
+                                        @for (translation of chapters.data[chapterKey]; track translation.id) {
+                                            <img width="16" height="16" class="mx-1 h-4 w-4" src="../../../assets/{{translation.attributes.translatedLanguage}}.svg" alt="lang">
+                                        }
+                                    </section>
+                                    <ion-icon name="chevron-down-outline"></ion-icon>
+                                </div>
+                                <div class="group-aria-[expanded=false]:hidden group-aria-[expanded=true]:flex flex-col px-4 py-2">
+                                    @for (translation of chapters.data[chapterKey]; track translation.id) {
+                                        @if ($odd) {
+                                            <div class="self-center justify-self-center w-3/4 h-[1px] bg-neutral-400 my-2"></div>
+                                        }
+                                        <section [routerLink]="['/chapter', translation.id]">
+                                            <div class="flex items-center justify-between my-1">
+                                                <section class="flex items-center">
+                                                    <img width="16" height="16" class="h-4 w-4" src="../../../assets/{{translation.attributes.translatedLanguage}}.svg" alt="lang">
+                                                    @if (translation.attributes.title) {
+                                                        <h2 class="font-semibold ml-1">{{ translation.attributes.title }}</h2>
+                                                    } @else {
+                                                        <h2 class="font-normal text-neutral-400 ml-1">Sin título</h2>
+                                                    }
+                                                </section>
+                                                <section class="flex items-center text-xs text-neutral-200 font-extralight">
+                                                    <ion-icon name="book-outline"></ion-icon>
+                                                    <h2 class="ml-1">Ch. {{ translation.attributes.chapter }}</h2>
+                                                </section>
+                                            </div>
+                                            <div class="flex items-center text-sm text-neutral-300">
+                                                <ion-icon name="people-outline"></ion-icon>
+                                                <section class="ml-1">
+                                                    @for (scanlation of translation.relationships.scanlation_group; track scanlation.id) {
+                                                        <span class="mx-0.5">{{ scanlation.attributes.name }}</span>
+                                                    } @empty {
+                                                        <span class="mx-0.5 text-neutral-400">Sin grupo</span>
+                                                    }
+                                                </section>
+                                            </div>
+                                            <div class="flex items-center text-sm text-neutral-300">
+                                                <ion-icon name="person-outline"></ion-icon>
+                                                <section class="ml-1">
+                                                    @for (user of translation.relationships.user; track user.id) {
+                                                        <span class="mx-0.5">{{ user.attributes.username }}</span>
+                                                    } @empty {
+                                                        <span class="mx-0.5">Sin usuario</span>
+                                                    }
+                                                </section>
+                                            </div>
+                                            <div class="flex items-center justify-between my-1 text-sm">
+                                                <section class="flex items-center">
+                                                    <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+                                                    <span class="mx-1">{{ format(translation.commentaries.comments ? translation.commentaries.comments.repliesCount : 0) }}</span>
+                                                </section>
+                                                <section class="flex items-center">
+                                                    <ion-icon name="calendar-clear-outline"></ion-icon>
+                                                    <span class="mx-1">{{ translation.attributes.normalizedPublishAt }}</span>
+                                                </section>
+                                                <section class="flex items-center">
+                                                    <ion-icon name="eye-off-outline"></ion-icon>
+                                                </section>
+                                            </div>
+                                        </section>
+                                        @if ($odd && !$last) {
+                                            <div class="self-center justify-self-center w-3/4 h-[1px] bg-neutral-400 my-2"></div>
+                                        }
+                                    }
+                                </div>
+                            } @else {
+                                <div [routerLink]="['/chapter', chapters.data[chapterKey][0].id]" class="bg-stone-800 px-4 py-2 rounded-md">
+                                    <section class="flex items-center justify-between my-1">
+                                        <div class="flex items-center">
+                                            <img width="16" height="16" class="h-4 w-4" src="../../../assets/{{chapters.data[chapterKey][0].attributes.translatedLanguage}}.svg" alt="lang">
+                                            @if (chapters.data[chapterKey][0].attributes.title) {
+                                                <h2 class="font-semibold ml-1">{{ chapters.data[chapterKey][0].attributes.title }}</h2>
+                                            } @else {
+                                                <h2 class="font-semibold ml-1">Sin título</h2>
+                                            }
+                                        </div>
+                                        <div class="flex items-center text-xs text-neutral-200 font-extralight">
+                                            <ion-icon name="book-outline"></ion-icon>
+                                            <h2 class="ml-1">Ch. {{ chapters.data[chapterKey][0].attributes.chapter }}</h2>
+                                        </div>
+                                    </section>
+                                    <section class="flex items-center text-sm text-neutral-300">
+                                        <ion-icon name="people-outline"></ion-icon>
+                                        <div class="ml-1">
+                                            @for (scanlation of chapters.data[chapterKey][0].relationships.scanlation_group; track scanlation.id) {
+                                                <span class="mx-0.5">{{ scanlation.attributes.name }}</span>
+                                            } @empty {
+                                                <span class="mx-0.5">Sin grupo</span>
+                                            }
+                                        </div>
+                                    </section>
+                                    <section class="flex items-center text-sm text-neutral-300">
+                                        <ion-icon name="person-outline"></ion-icon>
+                                        <div class="ml-1">
+                                            @for (user of chapters.data[chapterKey][0].relationships.user; track user.id) {
+                                                <span class="mx-0.5">{{ user.attributes.username }}</span>
+                                            } @empty {
+                                                <span class="mx-0.5">Sin usuario</span>
+                                            }
+                                        </div>
+                                    </section>
+                                    <section class="flex items-center justify-between my-1 text-sm">
+                                        <div class="flex items-center">
+                                            <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+                                            <span class="mx-1">{{ format(chapters.data[chapterKey][0].commentaries.comments ? chapters.data[chapterKey][0].commentaries.comments.repliesCount : 0) }}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <ion-icon name="calendar-clear-outline"></ion-icon>
+                                            <span class="mx-1">{{ chapters.data[chapterKey][0].attributes.normalizedPublishAt }}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <ion-icon name="eye-off-outline"></ion-icon>
+                                        </div>
+                                    </section>
+                                </div>
+                            }
+                        </section>
+                    }
+                }
+            </div>
+        </section>
+        <section class="flex justify-center px-4 my-2">
+            <div class="flex items-center justify-between w-3/6 ">
+                <section (click)="prevPage()" class="ion-activatable ripple-parent ripple-effect flex items-center bg-stone-800 font-bold rounded-md {{ lowest > 1 ? 'text-neutral-400' : 'text-white' }}">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <ion-icon class="p-2.5 rounded-md" name="chevron-back-outline"></ion-icon>
+                </section>
+                <section (click)="nextPage()" class="ion-activatable ripple-parent ripple-effect flex items-center bg-stone-800 font-bold rounded-md {{ lowest > 1 ? 'text-neutral-400' : 'text-white' }}">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <ion-icon class="p-2.5 rounded-md" name="chevron-forward-outline"></ion-icon>
+                </section>
+            </div>
+        </section>
+    } @else {
+        <section class="w-full flex items-center justify-center">
+            <ion-spinner name="crescent"></ion-spinner>
+        </section>
+    }
+</ion-content>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,120 @@
+<main>
+  <!-- Últimos Capítulos -->
+  <section class="my-4 px-4">
+    <div class="w-full flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Últimos Capítulos</h1>
+      <ion-icon class="text-xl" name="arrow-forward"></ion-icon>
+    </div>
+    <section class="my-4">
+      @if (loaded.latestChapters) {
+        @for (chapter of latests; track chapter.id) {
+          @if ($index < 6) {
+            <div [routerLink]="['/chapter', chapter.chapter.chapter_id]" class="flex items-center my-2">
+              <img loading="lazy" class="h-20 min-w-14 max-w-14" src="https://mangadex.org/covers/{{chapter.manga.id}}/{{chapter.cover}}.256.jpg" alt="{{chapter.manga.id}}">
+              <div class="mx-2">
+                <h2 class="text-base font-bold break-all line-clamp-1">{{ chapter.manga.attributes.title.en }}</h2>
+                @if (chapter.chapter.attributes.title) {
+                  <div class="flex items-center my-0.5">
+                    <img width="16" height="16" class="h-4 w-4" src="../../../assets/{{ chapter.chapter.attributes.translatedLanguage }}.svg" alt="{{ chapter.chapter.attributes.translatedLanguage }}">
+                    <span class="text-sm break-all line-clamp-1 text-gray-200 ml-1">Ch. {{ chapter.chapter.attributes.chapter }} - {{ chapter.chapter.attributes.title }}</span>
+                  </div>
+                } @else {
+                  <div class="flex items-center my-0.5">
+                    <img width="16" height="16" class="h-4 w-4" src="../../../assets/{{ chapter.chapter.attributes.translatedLanguage }}.svg" alt="{{ chapter.chapter.attributes.translatedLanguage }}">
+                    <span class="text-sm break-all line-clamp-1 text-gray-200 ml-1">Ch. {{ chapter.chapter.attributes.chapter ? chapter.chapter.attributes.chapter : '1' }}</span>
+                  </div>
+                }
+                @if (chapter.chapter.relationships[0].type == 'scanlation_group') {
+                  <div class="flex items-center">
+                    <div class="flex items-center">
+                      <ion-icon class="w-4 h-4" name="people"></ion-icon>
+                      <span class="text-sm ml-1">{{ chapter.chapter.relationships[0].attributes.name }}</span>
+                    </div>
+                  </div>
+                }
+                <div class="flex items-center">
+                  <ion-icon class="w-4 h-4" name="time"></ion-icon>
+                  <span class="text-sm ml-1">{{ chapter.uploatedDate }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      } @else {
+        @for (number of [1, 2, 3, 4, 5, 6]; track number) {
+          <div class="w-full {{ $odd ? 'h-16' : 'h-24' }} py-2 my-2 rounded-md animate-pulse bg-stone-900"></div>
+        }
+      }
+    </section>
+  </section>
+  <!-- Bar -->
+  <section class="w-full flex justify-center my-4">
+    <div class="w-3/4 h-[1px] bg-stone-800"></div>
+  </section>
+  <!-- Seasonals -->
+  <section class="my-4 px-4">
+    @if (loaded.seasonals) {
+      <div class="flex items-center justify-between">
+        <h1 class="text-lg font-bold">{{ seasonals.name }}</h1>
+        <ion-icon class="text-lg" name="arrow-forward"></ion-icon>
+      </div>
+      <div class="my-2 no-swipe">
+        <swiper-container [slidesPerView]="2" [loop]="true">
+          @for (manga of seasonals.mangas; track manga.id) {
+            <swiper-slide [routerLink]="['/manga', manga.id]" class="mx-2">
+              <img loading="lazy" class="aspect-[5/7] rounded-md shadow-md w-full h-full" src="https://mangadex.org/covers/{{ manga.id }}/{{ manga.cover }}.256.jpg" alt="{{ manga.id }}">
+              <h6 class="mt-2 text-sm line-clamp-2">{{ manga.attributes.title.en }}</h6>
+            </swiper-slide>
+          }
+        </swiper-container>
+      </div>
+    } @else {
+      <div class="w-full h-6 py-2 my-2 rounded-md animate-pulse bg-stone-900"></div>
+      <div class="flex overflow-auto w-full">
+        @for (number of [1, 2]; track number) {
+          <section class="flex flex-col w-32 mx-2">
+            <div class="h-40 rounded-md animate-pulse bg-stone-900"></div>
+            <div class="h-4 mt-2 rounded-md animate-pulse bg-stone-900"></div>
+          </section>
+        }
+      </div>
+    }
+  </section>
+  <!-- Bar -->
+  <section class="w-full flex justify-center my-4">
+    <div class="w-3/4 h-[1px] bg-stone-800"></div>
+  </section>
+  <!-- Recently Added -->
+  <section class="my-4 px-4">
+    @if (loaded.recentlyAdded) {
+      <div class="flex items-center justify-between">
+        <h1 class="text-lg font-bold">Añadidos Recientemente</h1>
+        <ion-icon class="text-lg" name="arrow-forward"></ion-icon>
+      </div>
+      <div class="my-2 no-swipe">
+        <swiper-container [slidesPerView]="2" [loop]="true">
+          @for (manga of recentlyAdded; track manga.id) {
+            <swiper-slide [routerLink]="['/manga', manga.id]" class="mx-2">
+              <img loading="lazy" class="aspect-[5/7] rounded-md shadow-md w-full h-full" src="https://mangadex.org/covers/{{ manga.id }}/{{ manga.cover }}.256.jpg" alt="{{ manga.id }}">
+              <h6 class="mt-2 text-sm line-clamp-2">{{ manga.attributes.title.en }}</h6>
+            </swiper-slide>
+          }
+        </swiper-container>
+      </div>
+    } @else {
+      <div class="w-full h-6 py-2 my-2 rounded-md animate-pulse bg-stone-900"></div>
+      <div class="flex overflow-auto w-full">
+        @for (number of [1, 2]; track number) {
+          <section class="flex flex-col w-32 mx-2">
+            <div class="h-40 rounded-md animate-pulse bg-stone-900"></div>
+            <div class="h-4 mt-2 rounded-md animate-pulse bg-stone-900"></div>
+          </section>
+        }
+      </div>
+    }
+  </section>
+  <!-- Bar -->
+  <section class="w-full flex justify-center my-4">
+    <div class="w-3/4 h-[1px] bg-stone-800"></div>
+  </section>
+</main>

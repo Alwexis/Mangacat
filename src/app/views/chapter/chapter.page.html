@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true">
+  @if (loaded) {
+    <main class="h-full flex flex-col justify-between">
+      <section class="bg-stone-800 flex items-center justify-between w-full px-2 py-2">
+        <ion-icon (click)="goBack()" name="chevron-back-outline"></ion-icon>
+        <div class="flex items-center">
+          <img class="w-4 h-4" src="../../../assets/{{ data.manga_info.attributes.translatedLanguage }}.svg" alt="{{ data.manga_info.attributes.translatedLanguage }}_lang">
+          <h3 class="mx-1 font-semibold text-white text-sm">{{ data.manga_info.attributes.title ? data.manga_info.attributes.title : 'Sin Título' }} - Ch. {{ data.manga_info.attributes.chapter }}</h3>
+        </div>
+        <div (click)="choosePage()" class="mx-2 bg-stone-700 rounded-md flex items-center justify-center">
+          <h3 class="p-1 text-xs">{{ actualPage }}/{{ data.images.length }}</h3>
+        </div>
+      </section>
+      <img (click)="interaction($event)" src="https://corsproxy.io/?{{ data.images[actualPage - 1] }}" alt="...">
+      <div></div>
+      <!--
+      <section class="bg-stone-800 flex items-center justify-center">
+        <div (click)="prevPage()" class="bg-stone-700 rounded-md my-2 flex items-center justify-center ion-activatable ripple-parent ripple-effect">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-icon class="p-1" name="chevron-back-outline"></ion-icon>
+        </div>
+        <div class="mx-2 bg-stone-700 rounded-md flex items-center justify-center">
+          <h3 class="p-1 text-xs">{{ actualPage }}/{{ data.images.length }}</h3>
+        </div>
+        <div (click)="nextPage()" class="bg-stone-700 rounded-md my-2 flex items-center justify-center ion-activatable ripple-parent ripple-effect">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-icon class="p-1" name="chevron-forward-outline"></ion-icon>
+        </div>
+      </section>
+      -->
+    </main>
+  } @else {
+    <main class="w-full h-full flex flex-col items-center justify-center">
+      <img class="animate-spin" src="../../../assets/mangacat.png" alt="mangacat">
+      <h1 class="text-2xl font-bold">Cargando imágenes...</h1>
+    </main>
+  }
+</ion-content>

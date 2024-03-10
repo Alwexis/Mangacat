@@ -1,0 +1,69 @@
+<main>
+  <section aria-expanded="false" class="group">
+    <div class="w-full flex items-center justify-between px-2">
+      <ion-searchbar [(ngModel)]="filter.name" class="text-sm" placeholder="Tokyo Ghoul..." show-clear-button="always"></ion-searchbar>
+      <section (click)="displayFilters($event)" class="flex items-center bg-indigo-400 rounded-md px-1.5 py-1">
+        <ion-icon name="funnel-outline"></ion-icon>
+        <span class="mx-2">Filtros</span>
+        <ion-icon class="arrow-icon" name="chevron-forward-outline"></ion-icon>
+      </section>
+    </div>
+    <div class="group-aria-[expanded=false]:hidden flex flex-col px-2">
+      @if (loaded.tags) {
+        <section class="flex items-center justify-between">
+          <ion-select labelPlacement="start" class="w-1/2" placeholder="Tags" [multiple]="true">
+            @for (tag of tags; track tag.id) {
+              <ion-select-option value="{{ tag.id }}">{{ tag.attributes.name.en }}</ion-select-option>
+            }
+          </ion-select>
+          <ion-select labelPlacement="end" class="w-1/2" placeholder="Rating" [multiple]="true">
+            <ion-select-option value="safe">Todo publico</ion-select-option>
+            <ion-select-option value="suggestive">Sugestivo</ion-select-option>
+            <ion-select-option value="erotica">Erótico</ion-select-option>
+          </ion-select>
+        </section>
+        <section class="flex items-center justify-between my-2">
+          <ion-select labelPlacement="start" class="w-1/2" placeholder="Demográfica" [multiple]="true">
+            <ion-select-option value="shounen">Shounen</ion-select-option>
+            <ion-select-option value="shoujo">Shoujo</ion-select-option>
+            <ion-select-option value="seinen">Seinen</ion-select-option>
+            <ion-select-option value="josei">Josei</ion-select-option>
+            <ion-select-option value="none">Cualquiera</ion-select-option>
+          </ion-select>
+          <ion-select labelPlacement="end" class="w-1/2" placeholder="Estatus" [multiple]="true">
+            <ion-select-option value="ongoing">Publicándose</ion-select-option>
+            <ion-select-option value="completed">Completado</ion-select-option>
+            <ion-select-option value="hiatus">Hiatus</ion-select-option>
+            <ion-select-option value="cancelled">Cancelado</ion-select-option>
+          </ion-select>
+        </section>
+      } @else {
+        <section class="w-full flex items-center justify-between flex-wrap">
+          @for (number of [1, 2, 3, 4]; track number) {
+            <div class="w-5/12 h-6 mx-1 my-1 rounded-md animate-pulse bg-stone-900"></div>
+          }
+        </section>
+      }
+    </div>
+    <section (click)="filterMangas()" class="flex items-center justify-center w-full my-4">
+      <span class="w-1/2 rounded-md py-0.5 px-2 bg-indigo-400 text-center">Buscar</span>
+    </section>
+  </section>
+  <!-- Mangas -->
+  <section class="flex items-center justify-center flex-wrap my-2">
+    @if (loaded.mangas) {
+      @for (manga of mangas; track manga.id) {
+        <div [routerLink]="['/manga', manga.id]" class="mx-2 my-2 w-40 relative rounded-md">
+          <img class="h-56 aspect-[5/7] rounded-md shadow-md w-full" loading="lazy" src="https://mangadex.org/covers/{{ manga.id }}/{{ manga.cover_art }}.256.jpg" alt="{{ manga.id }}">
+          <section class="w-full absolute bottom-0 rounded-b-md bg-stone-800 bg-opacity-75">
+            <span class="px-2 py-1 text-sm font-semibold line-clamp-2">{{ manga.attributes.title.en }}</span>
+          </section>
+        </div>
+      }
+    } @else {
+      @for (number of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track number) {
+        <div class="h-56 w-40 mx-2 my-2 rounded-md animate-pulse bg-stone-900"></div>
+      }
+    }
+  </section>
+</main>
